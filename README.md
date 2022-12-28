@@ -11,7 +11,7 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 ## Command Goals
 
 1. [X] Prompt for pod to work on
-2. [] Show files to work on
+2. [X] Show files to work on
 3. [] Run Codemods
     * [] Run Angle Bracket Codemod
     * [] Run No Implicit This Codemod
