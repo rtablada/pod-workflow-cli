@@ -1,6 +1,22 @@
 import { getFilesByExtension } from '../utils';
 import { runCommand } from '../utils/exec';
 
+export async function templateLint(filePaths: string[]) {
+  const files = getFilesByExtension(filePaths, '.hbs');
+
+  try {
+    await runCommand(`ember-template-lint ${files.join(' ')}`);
+  } catch {}
+}
+
+export async function runEsLint(filePaths: string[]) {
+  const files = getFilesByExtension(filePaths, '.js');
+
+  try {
+    await runCommand(`eslint ${files.join(' ')}`);
+  } catch {}
+}
+
 export async function templateLintFix(filePaths: string[]) {
   const files = getFilesByExtension(filePaths, '.hbs');
 

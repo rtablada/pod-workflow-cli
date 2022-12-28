@@ -8,10 +8,11 @@ import {
   runNoImplicitThisForFiles,
 } from './steps/codemods';
 import getPodDirectoryInformation from './steps/get-pod-directory-information';
-import { esLintFix, templateLintFix } from './steps/lint-fix';
+import { esLintFix, runEsLint, templateLint, templateLintFix } from './steps/lint-fix';
 import { removeJsLintIgnore, removeTemplateLintIgnore } from './steps/lint-ignore';
 import { promptPodFiles } from './steps/prompt-pod-files';
 import { directoryInformation } from './test-data';
+import { promptToRerun } from './utils/exec';
 inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
 
 async function main() {
@@ -37,6 +38,12 @@ async function main() {
   await esLintFix(directoryInformation.podFileFullPaths);
 
   await promptCommitChanges(directoryInformation, 'Fix Lint Errors');
+
+  await promptToRerun('Automated fixes have been applied. Rerun Linters or Continue to Components?', async () => {
+    console.clear();
+    await templateLint(directoryInformation.podFileFullPaths);
+    await runEsLint(directoryInformation.podFileFullPaths);
+  });
 }
 
 main();

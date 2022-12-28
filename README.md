@@ -21,7 +21,7 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 5. [X] Remove lint ignore for files in selected pod
 6. [X] Run Lint Fix
 7. [X] Prompt For Commit
-8. [ ] Show Remaining Lint Errors
+8. [X] Show Remaining Lint Errors
 9. [ ] Show Components Used
 10. [ ] Prompt user to select which components they want to fix
     * Figure out by getting component info
