@@ -1,14 +1,15 @@
 import inquirer from 'inquirer';
 import { getLinesToFillScreen } from '../utils';
+import { DirectoryInformation } from './get-pod-directory-information';
 
-export async function promptPodFiles(podDirectoryPath: string, podFiles: string[]) {
+export async function promptPodFiles({ podDirectoryPath, podFilePaths }: DirectoryInformation) {
   let confirmRun = null;
 
   while (confirmRun === null) {
     const result = await inquirer.prompt({
       name: 'confirmRun',
       type: 'expand',
-      message: `Pod Workflow will Run on ${podFiles.length} files in "/${podDirectoryPath}": continue?`,
+      message: `Pod Workflow will Run on ${podFilePaths.length} files in "/${podDirectoryPath}": continue?`,
       default: 'continue',
       choices: [
         {
@@ -38,7 +39,7 @@ export async function promptPodFiles(podDirectoryPath: string, podFiles: string[
         message: 'List of files in current pod. Press enter to continue.',
         name: 'fileIgnore',
         type: 'rawlist',
-        choices: podFiles,
+        choices: podFilePaths,
         pageSize: getLinesToFillScreen(),
       });
 

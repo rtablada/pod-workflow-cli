@@ -13,9 +13,10 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 1. [X] Prompt for pod to work on
 2. [X] Show files to work on
 3. [] Run Codemods
-    * [] Run Angle Bracket Codemod
-    * [] Run No Implicit This Codemod
-    * [] Run Native Class Codemod
+    * [X] Run Angle Bracket Codemod
+    * [X] Run No Implicit This Codemod
+    * [X] ES5 Getter Codemod
+    * [X] Run Native Class Codemod
 4. [] Prompt User to Commit Changes (check for changes)
 5. [] Remove lint ignore for files in selected pod
 6. [] Run Lint Fix

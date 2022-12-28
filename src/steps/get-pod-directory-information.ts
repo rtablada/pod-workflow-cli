@@ -2,12 +2,15 @@ import inquirer from 'inquirer';
 import directoryTree, { DirectoryTree } from 'directory-tree';
 import { getLinesToFillScreen, getAllFilePaths, relativePathToPodBase } from '../utils';
 
-export default async function getPodDirectoryInformation(): Promise<{
+export interface DirectoryInformation {
   podDirectoryPath: string;
   podDirectoryFullPath: string;
   podDirectoryTree: DirectoryTree;
-  podFiles: string[];
-}> {
+  podFilePaths: string[];
+  podFileFullPaths: string[];
+}
+
+export default async function getPodDirectoryInformation(): Promise<DirectoryInformation> {
   const { podDirectory: podDirectoryFullPath }: { podDirectory: string } = await inquirer.prompt({
     name: 'podDirectory',
     type: 'file-tree-selection',
@@ -22,8 +25,10 @@ export default async function getPodDirectoryInformation(): Promise<{
     exclude: /.DS_Store/i,
   });
 
-  const podFiles = getAllFilePaths(podDirectoryTree).map(relativePathToPodBase);
+  const podFileFullPaths = getAllFilePaths(podDirectoryTree);
+
+  const podFilePaths = podFileFullPaths.map(relativePathToPodBase);
   const podDirectoryPath = relativePathToPodBase(podDirectoryFullPath);
 
-  return { podDirectoryFullPath, podDirectoryPath, podDirectoryTree, podFiles };
+  return { podDirectoryFullPath, podDirectoryPath, podDirectoryTree, podFilePaths: podFilePaths, podFileFullPaths };
 }

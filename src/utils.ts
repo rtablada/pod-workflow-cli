@@ -15,3 +15,7 @@ export const getAllFilePaths = (podDirectoryTree: DirectoryTree): string[] => {
 };
 
 export const getLinesToFillScreen = () => process.stdout.getWindowSize()[1] - 5;
+
+export function getFilesByExtension(paths: string[], extension: string): string[] {
+  return paths.filter((p) => p.match(new RegExp(`${extension}$`)));
+}
