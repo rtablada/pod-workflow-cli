@@ -3,7 +3,6 @@ import { runCommand } from '../utils/exec';
 
 export async function templateLintFix(filePaths: string[]) {
   const files = getFilesByExtension(filePaths, '.hbs');
-  console.clear();
 
   console.log(`Running Ember Template Lint for ${files.length} files...`);
 
@@ -16,15 +15,12 @@ export async function templateLintFix(filePaths: string[]) {
 
 export async function esLintFix(filePaths: string[]) {
   const files = getFilesByExtension(filePaths, '.js');
-  console.clear();
 
   console.log(`Running ESLint for ${files.length} files...`);
 
   try {
     await runCommand(`eslint --fix ${files.join(' ')}`);
-  } catch (e) {
-    console.log(e);
-  }
+  } catch {}
 
   console.log(`Finished Running ESLint`);
 }

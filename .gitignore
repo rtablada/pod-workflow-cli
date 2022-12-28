@@ -1,6 +1,8 @@
 # Test Data
 ./data/
 
+src/test-data.ts
+
 # Logs
 logs
 *.log

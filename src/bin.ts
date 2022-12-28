@@ -11,12 +11,13 @@ import getPodDirectoryInformation from './steps/get-pod-directory-information';
 import { esLintFix, templateLintFix } from './steps/lint-fix';
 import { removeJsLintIgnore, removeTemplateLintIgnore } from './steps/lint-ignore';
 import { promptPodFiles } from './steps/prompt-pod-files';
+import { directoryInformation } from './test-data';
 inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
 
 async function main() {
   console.clear();
 
-  const directoryInformation = await getPodDirectoryInformation();
+  // const directoryInformation = await getPodDirectoryInformation();
 
   await promptPodFiles(directoryInformation);
 
