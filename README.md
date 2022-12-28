@@ -12,7 +12,7 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 
 1. [X] Prompt for pod to work on
 2. [X] Show files to work on
-3. [] Run Codemods
+3. [X] Run Codemods
     * [X] Run Angle Bracket Codemod
     * [X] Run No Implicit This Codemod
     * [X] ES5 Getter Codemod
@@ -21,9 +21,9 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 5. [X] Remove lint ignore for files in selected pod
 6. [X] Run Lint Fix
 7. [X] Prompt For Commit
-8. [] Show Remaining Lint Errors
-9. [] Show Components Used
-10. [] Prompt user to select which components they want to fix
+8. [ ] Show Remaining Lint Errors
+9. [ ] Show Components Used
+10. [ ] Prompt user to select which components they want to fix
     * Figure out by getting component info
     * List places where it is used outside of selected pod
-11. [] Repeat 3-7 on selected component paths
+11. [ ] Repeat 3-7 on selected component paths
