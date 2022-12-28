@@ -1,0 +1,34 @@
+import { DirectoryInformation } from './steps/get-pod-directory-information';
+import simpleGit from 'simple-git';
+import inquirer from 'inquirer';
+import { promptContinue } from './input-utils';
+
+const gitClient = simpleGit();
+
+export async function promptCommitChanges(directoryInformation: DirectoryInformation, message: string): Promise<void> {
+  if (await hasChanges()) {
+    await gitClient.add(directoryInformation.podDirectoryFullPath);
+
+    const { gitCommit } = await inquirer.prompt({
+      name: 'gitCommit',
+      type: 'confirm',
+      message: `Commit changes for step: ${message}`,
+    });
+
+    if (gitCommit) {
+      const commitResult = await gitClient.commit(
+        `Pod Workflow 🤖 for "${directoryInformation.podDirectoryPath}: ${message}"`
+      );
+    } else {
+      await promptContinue();
+    }
+  } else {
+    console.log(`Skipping commit for "${message}: there were no changes detected`);
+  }
+}
+
+export async function hasChanges(): Promise<boolean> {
+  const status = await gitClient.status();
+
+  return !status.isClean();
+}
