@@ -7,7 +7,9 @@ import {
   runNativeClassCodemod,
   runNoImplicitThisForFiles,
 } from './steps/codemods';
-import getPodDirectoryInformation, { DirectoryInformation } from './steps/get-pod-directory-information';
+import getPodDirectoryInformation from './steps/get-pod-directory-information';
+import { esLintFix, templateLintFix } from './steps/lint-fix';
+import { removeJsLintIgnore, removeTemplateLintIgnore } from './steps/lint-ignore';
 import { promptPodFiles } from './steps/prompt-pod-files';
 inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
 
@@ -24,6 +26,16 @@ async function main() {
   await runEs5GetterCodemod(directoryInformation);
 
   await promptCommitChanges(directoryInformation, 'Run Codemods');
+
+  await removeTemplateLintIgnore(directoryInformation.podFileFullPaths);
+  await removeJsLintIgnore(directoryInformation.podFileFullPaths);
+
+  await promptCommitChanges(directoryInformation, 'Remove Lint Ignore');
+
+  await templateLintFix(directoryInformation.podFileFullPaths);
+  await esLintFix(directoryInformation.podFileFullPaths);
+
+  await promptCommitChanges(directoryInformation, 'Fix Lint Errors');
 }
 
 main();

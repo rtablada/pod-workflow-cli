@@ -18,9 +18,9 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
     * [X] ES5 Getter Codemod
     * [X] Run Native Class Codemod
 4. [X] Prompt User to Commit Changes (check for changes)
-5. [] Remove lint ignore for files in selected pod
-6. [] Run Lint Fix
-7. [] Prompt For Commit
+5. [X] Remove lint ignore for files in selected pod
+6. [X] Run Lint Fix
+7. [X] Prompt For Commit
 8. [] Show Remaining Lint Errors
 9. [] Show Components Used
 10. [] Prompt user to select which components they want to fix

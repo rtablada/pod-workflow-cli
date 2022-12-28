@@ -1,19 +1,6 @@
 import { DirectoryInformation } from './get-pod-directory-information';
-import { exec } from 'child_process';
 import { getFilesByExtension } from '../utils';
-
-const runCommand = (cmd) =>
-  new Promise((resolve, reject) => {
-    const script = exec(cmd);
-    script.stdout.on('data', console.log);
-    script.on('exit', (code) => {
-      if (code === 1) {
-        return reject();
-      }
-
-      resolve(null);
-    });
-  });
+import { runCommand } from '../utils/exec';
 
 export async function runAngleBracketCodemodForFiles(directoryInformation: DirectoryInformation) {
   const files = getFilesByExtension(directoryInformation.podFileFullPaths, '.hbs');
