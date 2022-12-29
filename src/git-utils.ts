@@ -5,9 +5,14 @@ import { promptContinue } from './input-utils';
 
 const gitClient = simpleGit();
 
-export async function promptCommitChanges(directoryInformation: DirectoryInformation, message: string): Promise<void> {
+export async function promptCommitChanges(
+  directoryInformation: DirectoryInformation,
+  paths: string[],
+  message: string,
+  otherMessages: string[] = []
+): Promise<void> {
   if (await hasChanges()) {
-    await gitClient.add(directoryInformation.podDirectoryFullPath);
+    await gitClient.add(paths);
 
     const { gitCommit } = await inquirer.prompt({
       name: 'gitCommit',
@@ -16,9 +21,10 @@ export async function promptCommitChanges(directoryInformation: DirectoryInforma
     });
 
     if (gitCommit) {
-      const commitResult = await gitClient.commit(
-        `Pod Workflow 🤖 for "${directoryInformation.podDirectoryPath}: ${message}"`
-      );
+      const commitResult = await gitClient.commit([
+        `Pod Workflow 🤖 for "${directoryInformation.podDirectoryPath}: ${message}"`,
+        ...otherMessages,
+      ]);
     } else {
       await promptContinue();
     }

@@ -1,5 +1,6 @@
 import { pascalCase } from '../utils';
 import { ComponentInfo } from '../ember-tools/component-info';
+import path from 'path';
 
 export default class ComponentUsedInfo {
   componentInfo: ComponentInfo;
@@ -32,5 +33,9 @@ export default class ComponentUsedInfo {
 
   get prettyComponentName() {
     return `<${this.componentInfo.name.split('/').map(pascalCase).join('::')} />`;
+  }
+
+  get fullComponentPath(): string {
+    return path.resolve(path.dirname(this.componentInfo.filePaths[0]));
   }
 }

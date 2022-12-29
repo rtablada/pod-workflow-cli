@@ -16,6 +16,31 @@ export const runCommand = (cmd) =>
     });
   });
 
+export const promptContinue = async (message: string) => {
+  const result = await inquirer.prompt({
+    name: 'confirm',
+    type: 'expand',
+    message: message,
+    default: 'continue',
+    choices: [
+      {
+        key: 'y',
+        name: 'Continue',
+        value: 'continue',
+      },
+      {
+        key: 'n',
+        name: 'Exit',
+        value: 'exit',
+      },
+    ],
+  });
+
+  if (result.confirm === 'exit') {
+    process.exit(0);
+  }
+};
+
 export const promptToRerun = async (message: string, callback: () => Promise<void>): Promise<void> => {
   let confirm = null;
 

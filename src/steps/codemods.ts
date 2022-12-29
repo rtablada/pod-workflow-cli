@@ -2,8 +2,8 @@ import { DirectoryInformation } from './get-pod-directory-information';
 import { getFilesByExtension } from '../utils';
 import { runCommand } from '../utils/exec';
 
-export async function runAngleBracketCodemodForFiles(directoryInformation: DirectoryInformation) {
-  const files = getFilesByExtension(directoryInformation.podFileFullPaths, '.hbs');
+export async function runAngleBracketCodemodForFiles(paths: string[]) {
+  const files = getFilesByExtension(paths, '.hbs');
   console.clear();
 
   console.log(`Running Angle Bracket Codemod for ${files.length} files...`);
@@ -12,8 +12,8 @@ export async function runAngleBracketCodemodForFiles(directoryInformation: Direc
   console.log(`Finished Running Angle Bracket Codemod`);
 }
 
-export async function runNoImplicitThisForFiles(directoryInformation: DirectoryInformation) {
-  const files = getFilesByExtension(directoryInformation.podFileFullPaths, '.hbs');
+export async function runNoImplicitThisForFiles(paths: string[]) {
+  const files = getFilesByExtension(paths, '.hbs');
   console.clear();
 
   console.log(`Running No Implicit This Codemod for ${files.length} files...`);
@@ -22,8 +22,8 @@ export async function runNoImplicitThisForFiles(directoryInformation: DirectoryI
   console.log(`Finished Running No Implicit This Codemod`);
 }
 
-export async function runEs5GetterCodemod(directoryInformation: DirectoryInformation) {
-  const files = getFilesByExtension(directoryInformation.podFileFullPaths, '.js');
+export async function runEs5GetterCodemod(paths: string[]) {
+  const files = getFilesByExtension(paths, '.js');
   console.clear();
 
   console.log(`Running ES5 Getter Codemod for ${files.length} files...`);
@@ -32,8 +32,8 @@ export async function runEs5GetterCodemod(directoryInformation: DirectoryInforma
   console.log(`Finished Running ES5 Getter Codemod`);
 }
 
-export async function runNativeClassCodemod(directoryInformation: DirectoryInformation) {
-  const files = getFilesByExtension(directoryInformation.podFileFullPaths, '.js');
+export async function runNativeClassCodemod(paths: string[]) {
+  const files = getFilesByExtension(paths, '.js');
   console.clear();
 
   console.log(`Running Native Class Codemod for ${files.length} files...`);
