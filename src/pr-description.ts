@@ -1,8 +1,11 @@
-import { filesChangedSince } from './git-utils';
+import { readFile } from 'fs/promises';
+import path from 'path';
+import { ESLINT_DISABLE, TEMPLATE_LINT_DISABLE } from './consts';
+import { filesChangedSince, getRepoRootPath } from './git-utils';
 import { readLogs } from './info-logger/log-fs';
-import { ComponentUpgradeLog, UpgradeLog } from './info-logger/types';
+import { ComponentUpgradeLog, LintRemainingLog, UpgradeLog } from './info-logger/types';
 import { PrDescriptionArgs } from './types';
-import { angleBracketify } from './utils';
+import { angleBracketify, relativePathToProjectBase } from './utils';
 
 export async function generatePrBody(config: PrDescriptionArgs) {
   const upgradeLogs = await readLogs();
@@ -28,7 +31,7 @@ ${await getTestsUpdated(latestUpgradeLog, config)}
 
 # Remaining Lint Errors
 
-None`;
+${await getLintIgnoresInChangedFiles(latestUpgradeLog, config)}`;
   }
 }
 
@@ -62,5 +65,54 @@ async function getTestsUpdated(latestUpgradeLog: UpgradeLog, config: PrDescripti
     return 'None';
   }
 
-  return filesChanged.map((a) => `* ${a}`).join('\n');
+  return filesChanged.map((a) => `* ${relativePathToProjectBase(a)}`).join('\n');
+}
+
+async function getLintIgnoresInChangedFiles(latestUpgradeLog: UpgradeLog, config: PrDescriptionArgs) {
+  const filesChanged = await filesChangedSince(latestUpgradeLog.baseGitSha);
+
+  const remainingLintIgnores = (await Promise.all(filesChanged.map((a) => getLintIgnoresInChangedFile(a)))).filter(
+    (a) => a
+  );
+
+  return remainingLintIgnores
+    .map((lintRemainingLog) => {
+      return `* ${lintRemainingLog.path}
+${lintRemainingLog.lintErrors.map((err) => `  * ${err}`).join('\n')}`;
+    })
+    .join('\n');
+}
+
+function getLintIgnoresInChangedFile(filePath: string): Promise<LintRemainingLog> {
+  if (path.extname(filePath) === '.js') {
+    return getJsIgnores(filePath);
+  } else if (path.extname(filePath) === '.hbs') {
+    return getHbsIgnores(filePath);
+  }
+}
+
+async function getJsIgnores(filePath: string): Promise<LintRemainingLog> {
+  const fileContents = await readFile(filePath, { encoding: 'utf-8' });
+
+  const match = fileContents.match(ESLINT_DISABLE);
+
+  if (match) {
+    const rulesIgnored = match.groups.lintRules.trim().split(/\s+/);
+    return { path: relativePathToProjectBase(filePath), lintErrors: rulesIgnored };
+  }
+
+  return undefined;
+}
+
+async function getHbsIgnores(filePath: string): Promise<LintRemainingLog> {
+  const fileContents = await readFile(filePath, { encoding: 'utf-8' });
+
+  const match = fileContents.match(TEMPLATE_LINT_DISABLE);
+
+  if (match) {
+    const rulesIgnored = match.groups.lintRules.trim().split(/\s+/);
+    return { path: relativePathToProjectBase(filePath), lintErrors: rulesIgnored };
+  }
+
+  return undefined;
 }

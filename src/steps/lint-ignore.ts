@@ -1,8 +1,6 @@
 import { readFile, writeFile } from 'fs/promises';
+import { TEMPLATE_LINT_DISABLE, ESLINT_DISABLE } from '../consts';
 import { getFilesByExtension } from '../utils';
-
-const TEMPLATE_LINT_DISABLE = /^{{!\s*template-lint-disable.*}}\n/;
-const ESLINT_DISABLE = /^\/\*\s*eslint-disable.*\*\/\n/;
 
 function removeLintFromAllFiles(filePaths: string[], regex: RegExp, lintType: string) {
   return Promise.all(filePaths.map((filePath) => removeLintFromFile(filePath, regex, lintType)));

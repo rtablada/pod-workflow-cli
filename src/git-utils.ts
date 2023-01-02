@@ -2,6 +2,7 @@ import { DirectoryInformation } from './steps/get-pod-directory-information';
 import simpleGit from 'simple-git';
 import inquirer from 'inquirer';
 import { promptContinue } from './input-utils';
+import path from 'path';
 
 const gitClient = simpleGit();
 
@@ -43,8 +44,13 @@ export async function hasChanges(): Promise<boolean> {
   return !status.isClean();
 }
 
-export async function filesChangedSince(gitSha: string, path?: string): Promise<string[]> {
-  const diff = await gitClient.diffSummary(path ? [gitSha, path] : [gitSha]);
+export async function filesChangedSince(gitSha: string, filePath?: string): Promise<string[]> {
+  const root = await getRepoRootPath();
+  const diff = await gitClient.diffSummary(filePath ? [gitSha, filePath] : [gitSha]);
 
-  return diff.files.map((f) => f.file);
+  return diff.files.map((f) => path.join(root, f.file));
+}
+
+export async function getRepoRootPath() {
+  return await gitClient.revparse('--show-toplevel');
 }
