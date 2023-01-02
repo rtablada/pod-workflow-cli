@@ -1,4 +1,4 @@
-import { pascalCase } from '../utils';
+import { angleBracketify, pascalCase } from '../utils';
 import { ComponentInfo } from '../ember-tools/component-info';
 import path from 'path';
 
@@ -32,7 +32,7 @@ export default class ComponentUsedInfo {
   }
 
   get prettyComponentName() {
-    return `<${this.componentInfo.name.split('/').map(pascalCase).join('::')} />`;
+    return angleBracketify(this.componentInfo.name);
   }
 
   get fullComponentPath(): string {

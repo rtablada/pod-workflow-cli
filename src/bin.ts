@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 import path from 'path';
-import { getCurrentSha } from './git-utils';
+import { generatePrBody } from './pr-description';
 import { upgradePod } from './upgrade';
-
+import { PrDescriptionArgs } from './types';
+import clipboard from 'clipboardy';
 const program = new Command();
 
 program
@@ -24,8 +25,22 @@ program
     await upgradePod({ baseDirectory: config.baseDir, podDirectory: config.podDir });
   });
 
-program.command('pr-description').action(async () => {
-  console.error('not implemented');
-});
+program
+  .command('pr-description')
+  .description('Copies description of latest upgrade log to clipboard for PR Descriptions')
+  .addOption(new Option('-p, --pod-dashboard-url <url>', 'Base URL for pod-dashboard UI').env('POD_DASHBOARD'))
+  .option('-b, --base-dir <path>', 'parent pod directory', 'app/pods')
+  .option('--output-only', 'Print the PR body instead of copying to clipboard')
+  .action(async (config: PrDescriptionArgs) => {
+    const prBody = await generatePrBody(config);
+
+    if (config.outputOnly) {
+      console.log(prBody);
+    } else {
+      await clipboard.write(prBody);
+
+      console.log('Pr Description copied to clipboard!');
+    }
+  });
 
 program.parse();

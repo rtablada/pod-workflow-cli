@@ -42,3 +42,9 @@ export async function hasChanges(): Promise<boolean> {
 
   return !status.isClean();
 }
+
+export async function filesChangedSince(gitSha: string, path?: string): Promise<string[]> {
+  const diff = await gitClient.diffSummary(path ? [gitSha, path] : [gitSha]);
+
+  return diff.files.map((f) => f.file);
+}

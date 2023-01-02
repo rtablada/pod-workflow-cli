@@ -10,3 +10,9 @@ export interface UpgradePodArgs {
   baseDirectory: string;
   podDirectory?: string;
 }
+
+export interface PrDescriptionArgs {
+  baseDir: string;
+  podDashboardUrl: string;
+  outputOnly: boolean;
+}
