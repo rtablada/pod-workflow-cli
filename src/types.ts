@@ -5,3 +5,8 @@ export interface AppContext {
   directoryInformation: DirectoryInformation;
   componentInfo: ComponentResults;
 }
+
+export interface UpgradePodArgs {
+  baseDirectory: string;
+  podDirectory?: string;
+}

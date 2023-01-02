@@ -1,27 +1,30 @@
-import inquirer from 'inquirer';
-import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
+/* eslint-disable @typescript-eslint/no-var-requires */
+import { Command } from 'commander';
+import path from 'path';
+import { upgradePod } from './upgrade';
 
-import { getComponentInfo } from './ember-tools/component-info';
-import getPodDirectoryInformation from './steps/get-pod-directory-information';
-import { promptPodFiles } from './steps/prompt-pod-files';
-import { directoryInformation } from './test-data';
-import { upgradePaths } from './upgrade';
+const program = new Command();
 
-async function main() {
-  inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
-  console.clear();
+program
+  .name('pod-workflow')
+  .description('A modern way to progressively update your code to the best practices using lint rules')
+  .version(require(path.join(__dirname, '../', 'package.json')).version);
 
-  // const directoryInformation = await getPodDirectoryInformation();
-  const componentInfo = getComponentInfo();
+program
+  .command('upgrade-pod')
+  .description('Upgrades a given pod path with codemods, linting, LTTF, and more.')
+  .option('-b, --base-dir <path>', 'parent pod directory', 'app/pods')
+  .option(
+    '-p, --pod-dir <path>',
+    'Directory for pod to be upgraded relative to base dir: skips file tree prompt',
+    undefined
+  )
+  .action(async (config) => {
+    await upgradePod({ baseDirectory: config.baseDir, podDirectory: config.podDir });
+  });
 
-  await promptPodFiles(directoryInformation);
+program.command('pr-description').action(async () => {
+  console.error('not implemented');
+});
 
-  const appContext = {
-    directoryInformation,
-    componentInfo,
-  };
-
-  await upgradePaths(appContext, directoryInformation.podFileFullPaths);
-}
-
-main();
+program.parse();
