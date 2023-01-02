@@ -86,6 +86,13 @@ export async function upgradePaths({
     await runEsLint(paths);
   });
 
+  await promptCommitChanges(
+    appContext.directoryInformation,
+    paths,
+    'Edits for lint errors and failing tests',
+    commitMessageLines
+  );
+
   await updateUpgradeLog(upgradeLog);
 
   if (promptBeforeMoreComponents) {
