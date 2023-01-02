@@ -5,6 +5,10 @@ import { promptContinue } from './input-utils';
 
 const gitClient = simpleGit();
 
+export async function getCurrentSha() {
+  return await gitClient.revparse('HEAD');
+}
+
 export async function promptCommitChanges(
   directoryInformation: DirectoryInformation,
   paths: string[],

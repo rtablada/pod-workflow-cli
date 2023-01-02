@@ -1,6 +1,6 @@
 import { flatten } from 'lodash';
 import { findComponentsUsedInPaths } from './ember-tools/component-info';
-import { promptCommitChanges } from './git-utils';
+import { getCurrentSha, promptCommitChanges } from './git-utils';
 import ComponentUsedInfo from './models/component-used-info';
 import {
   runAngleBracketCodemodForFiles,
@@ -20,6 +20,9 @@ import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import { getComponentInfo } from './ember-tools/component-info';
 import getPodDirectoryInformation from './steps/get-pod-directory-information';
 import { promptPodFiles } from './steps/prompt-pod-files';
+import { UpgradeLog } from './info-logger/types';
+import { randomUUID } from 'crypto';
+import { updateUpgradeLog } from './info-logger/log-fs';
 
 export async function upgradePod(args: UpgradePodArgs) {
   inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
@@ -35,15 +38,31 @@ export async function upgradePod(args: UpgradePodArgs) {
     componentInfo,
   };
 
-  await upgradePaths(appContext, directoryInformation.podFileFullPaths);
+  const upgradeLog: UpgradeLog = {
+    upgradeType: 'upgrade-pod',
+    path: directoryInformation.podDirectoryPath,
+    id: randomUUID(),
+    componentsUpdated: [],
+    remainingLintErrors: [],
+    baseGitSha: await getCurrentSha(),
+  };
+
+  await upgradePaths({ appContext, paths: directoryInformation.podFileFullPaths, upgradeLog });
 }
 
-export async function upgradePaths(
-  appContext: AppContext,
-  paths: string[],
-  commitMessageLines: string[] = [],
-  promptBeforeMoreComponents = false
-) {
+export async function upgradePaths({
+  appContext,
+  paths,
+  commitMessageLines = [],
+  promptBeforeMoreComponents = false,
+  upgradeLog,
+}: {
+  appContext: AppContext;
+  paths: string[];
+  commitMessageLines?: string[];
+  promptBeforeMoreComponents?: boolean;
+  upgradeLog: UpgradeLog;
+}) {
   await runAngleBracketCodemodForFiles(paths);
   await runNoImplicitThisForFiles(paths);
   await runNativeClassCodemod(paths);
@@ -67,6 +86,8 @@ export async function upgradePaths(
     await runEsLint(paths);
   });
 
+  await updateUpgradeLog(upgradeLog);
+
   if (promptBeforeMoreComponents) {
     await promptContinue('Keep upgrading child components?');
   }
@@ -81,13 +102,30 @@ export async function upgradePaths(
 
   const components = await promptForComponentsToUpgrade(componentsUsed);
 
-  await upgradeComponents(appContext, components);
+  if (components.length === 0) {
+    console.log('Upgrade Complete!');
+
+    process.exit(0);
+  }
+
+  await upgradeComponents(appContext, components, upgradeLog);
 }
 
-async function upgradeComponents(appContext: AppContext, components: ComponentUsedInfo[]) {
+async function upgradeComponents(appContext: AppContext, components: ComponentUsedInfo[], upgradeLog: UpgradeLog) {
   const componentPaths = flatten(components.map((c) => c.componentInfo.filePaths));
+
+  upgradeLog.componentsUpdated = [
+    ...upgradeLog.componentsUpdated,
+    ...components.map((c) => ({ componentName: c.componentInfo.key })),
+  ];
 
   const commitMessageLines = components.map((c) => `Upgrading: ${c.prettyComponentName}`);
 
-  await upgradePaths(appContext, componentPaths, commitMessageLines, true);
+  await upgradePaths({
+    appContext,
+    paths: componentPaths,
+    commitMessageLines,
+    promptBeforeMoreComponents: true,
+    upgradeLog,
+  });
 }

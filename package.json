@@ -39,6 +39,8 @@
     "inquirer": "^8.0.0",
     "inquirer-file-tree-selection-prompt": "^1.0.5",
     "lodash": "^4.17.21",
-    "simple-git": "^3.15.1"
+    "path-exists": "^4.0.0",
+    "simple-git": "^3.15.1",
+    "uuid": "^9.0.0"
   }
 }

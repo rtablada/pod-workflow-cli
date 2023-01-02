@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Command } from 'commander';
 import path from 'path';
+import { getCurrentSha } from './git-utils';
 import { upgradePod } from './upgrade';
 
 const program = new Command();
