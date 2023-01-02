@@ -13,13 +13,13 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 Install this package from npm using
 
 ```sh
-npm install -g ember-pod-workflow-cli
+yarn global add ember-pod-workflow-cli@latest
 ```
 
 Then make sure you have installed/cached the various codemods (this prevents errors and speeds up execution of the workflow):
 
 ```sh
-npm install -g ember-angle-brackets-codemod ember-no-implicit-this-codemod ember-native-class-codemod
+yarn global add ember-angle-brackets-codemod@latest ember-no-implicit-this-codemod@latest ember-native-class-codemod@latest
 npx github:ember-codemods/es5-getter-ember-codemod # This will ask to install from github: select y (the command will likely error after that)
 ```
 
