@@ -8,6 +8,41 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 2. You're using [lint-to-the-future](https://github.com/mansona/lint-to-the-future) or heavy uses of Eslint Ignore to identify and address Deprecations
 3. You're wanting to update to Native Classes (this isn't completely necessary for 4.x but makes addressing some of the deprecations a bit easier)
 
+## Installation
+
+Install this package from npm using
+
+```sh
+npm install -g ember-pod-workflow-cli
+```
+
+Then make sure you have installed/cached the various codemods (this prevents errors and speeds up execution of the workflow):
+
+```sh
+npm install -g ember-angle-brackets-codemod ember-no-implicit-this-codemod ember-native-class-codemod
+npx github:ember-codemods/es5-getter-ember-codemod # This will ask to install from github: select y (the command will likely error after that)
+```
+
+## Use
+
+To use this CLI run:
+
+```sh
+pod-workflow upgrade-pod
+```
+
+This will interactively guide you through removing deprecations from a selected pod folder structure.
+
+After completing work on deprecations in a pod you can create a quick PR template.
+
+First set `POD_DASHBOARD` to the public URL of a pod workflow dashboard. Then run:
+
+```sh
+pod-workflow pr-description
+```
+
+This will copy a markdown flavored PR description with info about what has changed and what lint/deprecations are still left.
+
 ## Command Goals
 
 1. [X] Prompt for pod to work on
@@ -23,7 +58,7 @@ This assumes a few key assumptions and is highly opinionated (though PRs are wel
 7. [X] Prompt For Commit
 8. [X] Show Remaining Lint Errors
 9. [ ] Show Components Used
-10. [ ] Prompt user to select which components they want to fix
+10. [X] Prompt user to select which components they want to fix
     * Figure out by getting component info
     * List places where it is used outside of selected pod
-11. [ ] Repeat 3-7 on selected component paths
+11. [X] Repeat 3-7 on selected component paths
