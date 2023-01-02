@@ -1,5 +1,6 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
+import pathExists from 'path-exists';
 import { ESLINT_DISABLE, TEMPLATE_LINT_DISABLE } from './consts';
 import { filesChangedSince, getRepoRootPath } from './git-utils';
 import { readLogs } from './info-logger/log-fs';
@@ -96,6 +97,10 @@ function getLintIgnoresInChangedFile(filePath: string): Promise<LintRemainingLog
 }
 
 async function getJsIgnores(filePath: string): Promise<LintRemainingLog> {
+  if (!(await pathExists(filePath))) {
+    return undefined;
+  }
+
   const fileContents = await readFile(filePath, { encoding: 'utf-8' });
 
   const match = fileContents.match(ESLINT_DISABLE);
@@ -109,6 +114,10 @@ async function getJsIgnores(filePath: string): Promise<LintRemainingLog> {
 }
 
 async function getHbsIgnores(filePath: string): Promise<LintRemainingLog> {
+  if (!(await pathExists(filePath))) {
+    return undefined;
+  }
+
   const fileContents = await readFile(filePath, { encoding: 'utf-8' });
 
   const match = fileContents.match(TEMPLATE_LINT_DISABLE);
