@@ -5,7 +5,7 @@
   "repository": "git@github.com:rtablada/pod-workflow-cli.git",
   "author": "Ryan Tablada <ryan.tablada@gmail.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "bin": {
     "pod-workflow": "./cli.js"
   },

@@ -31,4 +31,4 @@ export function getFilesByExtension(paths: string[], extension: string): string[
 
 export const pascalCase = (str) => camelCase(str).replace(/^(.)/, toUpper);
 
-export const angleBracketify = (str: string) => `<${str.split('/').map(pascalCase).join('::')} />`;
+export const angleBracketify = (str: string) => `${str.split('/').map(pascalCase).join('::')}`;

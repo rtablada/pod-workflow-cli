@@ -75,6 +75,10 @@ async function getLintIgnoresInChangedFiles(latestUpgradeLog: UpgradeLog, config
     (a) => a
   );
 
+  if (remainingLintIgnores.length === 0) {
+    return 'None';
+  }
+
   return remainingLintIgnores
     .map((lintRemainingLog) => {
       return `* ${lintRemainingLog.path}

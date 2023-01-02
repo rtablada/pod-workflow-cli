@@ -32,7 +32,7 @@ export default class ComponentUsedInfo {
   }
 
   get prettyComponentName() {
-    return angleBracketify(this.componentInfo.name);
+    return `<${angleBracketify(this.componentInfo.name)} />`;
   }
 
   get fullComponentPath(): string {
