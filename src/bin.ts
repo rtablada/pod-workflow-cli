@@ -28,11 +28,20 @@ program
 program
   .command('pr-description')
   .description('Copies description of latest upgrade log to clipboard for PR Descriptions')
-  .addOption(new Option('-p, --pod-dashboard-url <url>', 'Base URL for pod-dashboard UI').env('POD_DASHBOARD'))
+  .addOption(
+    new Option('-p, --pod-dashboard-url <url>', 'Base URL for pod-dashboard UI')
+      .env('POD_DASHBOARD')
+      .makeOptionMandatory()
+  )
   .option('-b, --base-dir <path>', 'parent pod directory', 'app/pods')
+  .option('-l, --latest', 'Create PR Log for latest pod workflow (do not prompt for paths)')
   .option('--output-only', 'Print the PR body instead of copying to clipboard')
   .action(async (config: PrDescriptionArgs) => {
     const prBody = await generatePrBody(config);
+
+    if (!prBody) {
+      return;
+    }
 
     if (config.outputOnly) {
       console.log(prBody);

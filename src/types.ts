@@ -13,6 +13,7 @@ export interface UpgradePodArgs {
 
 export interface PrDescriptionArgs {
   baseDir: string;
+  latest: boolean;
   podDashboardUrl: string;
   outputOnly: boolean;
 }
