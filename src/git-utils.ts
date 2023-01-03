@@ -3,6 +3,7 @@ import simpleGit from 'simple-git';
 import inquirer from 'inquirer';
 import { promptContinue } from './input-utils';
 import path from 'path';
+import { confirm } from './prompts/confirm';
 
 const gitClient = simpleGit();
 
@@ -19,13 +20,7 @@ export async function promptCommitChanges(
   if (await hasChanges()) {
     await gitClient.add(paths);
 
-    const { gitCommit } = await inquirer.prompt({
-      name: 'gitCommit',
-      type: 'confirm',
-      message: `Commit changes for step: ${message}`,
-    });
-
-    if (gitCommit) {
+    if (await confirm(`Commit changes for step: ${message}`)) {
       const commitResult = await gitClient.commit([
         `Pod Workflow 🤖 for "${directoryInformation.podDirectoryPath}: ${message}"`,
         ...otherMessages,

@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, rm, writeFile } from 'fs/promises';
 import path from 'path';
 import pathExists from 'path-exists';
 import { UpgradeLog } from './types';
@@ -17,6 +17,10 @@ export async function readLogs(): Promise<UpgradeLog[]> {
   }
 
   return [];
+}
+
+export function deleteLogs(): Promise<void> {
+  return rm(getLogPath());
 }
 
 export async function writeLogs(logs: UpgradeLog[]): Promise<void> {

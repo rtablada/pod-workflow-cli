@@ -6,18 +6,17 @@ import { upgradePod } from './upgrade';
 import { PrDescriptionArgs } from './types';
 import clipboard from 'clipboardy';
 import { setupInquirer } from './prompts/setup';
-import { getFilesFromInput, requestPaths } from './prompts/request-paths';
+import { getFilesFromInput } from './prompts/request-paths';
 import {
   runAngleBracketCodemodForFiles,
   runNoImplicitThisForFiles,
   runNativeClassCodemod,
   runEs5GetterCodemod,
 } from './steps/codemods';
-import { fullPath, getAllFilePaths } from './utils';
 import { templateLintFix, esLintFix } from './steps/lint-fix';
 import { removeTemplateLintIgnore, removeJsLintIgnore } from './steps/lint-ignore';
-import directoryTree from 'directory-tree';
-import _ from 'lodash';
+import { confirm } from './prompts/confirm';
+import { deleteLogs, readLogs } from './info-logger/log-fs';
 const program = new Command();
 
 program
@@ -26,6 +25,24 @@ program
   .version(require(path.join(__dirname, '../', 'package.json')).version)
   .hook('preAction', () => {
     setupInquirer();
+  });
+
+program
+  .command('clear')
+  .description('Clears pod deprecation workflow logs')
+  .action(async () => {
+    const logs = await readLogs();
+
+    if (logs.length === 0) {
+      console.log('There are no existing logs to delete!');
+      return;
+    }
+
+    if (await confirm(`Are you sure you want to delete ${logs.length} workflow logs?`)) {
+      await deleteLogs();
+    } else {
+      return;
+    }
   });
 
 program
