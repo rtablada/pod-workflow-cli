@@ -20,6 +20,11 @@ export async function runEsLint(filePaths: string[]) {
 export async function templateLintFix(filePaths: string[]) {
   const files = getFilesByExtension(filePaths, '.hbs');
 
+  if (files.length === 0) {
+    console.log('No matching files found, skipping Ember Template Lint');
+    return;
+  }
+
   console.log(`Running Ember Template Lint for ${files.length} files...`);
 
   try {
@@ -31,6 +36,11 @@ export async function templateLintFix(filePaths: string[]) {
 
 export async function esLintFix(filePaths: string[]) {
   const files = getFilesByExtension(filePaths, '.js');
+
+  if (files.length === 0) {
+    console.log('No matching files found, skipping ESLint');
+    return;
+  }
 
   console.log(`Running ESLint for ${files.length} files...`);
 

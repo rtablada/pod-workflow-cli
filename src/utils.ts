@@ -11,6 +11,9 @@ export const relativePathToPodBase = (filePath: string, args: UpgradePodArgs) =>
   return path.relative(path.join(process.cwd(), args.baseDirectory), filePath);
 };
 
+export const fullPath = (filePath: string) => {
+  return path.join(process.cwd(), filePath);
+};
 export const fullPathFromPod = (filePath: string, args: UpgradePodArgs) => {
   return path.join(process.cwd(), args.baseDirectory, filePath);
 };
