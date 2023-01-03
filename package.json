@@ -1,6 +1,6 @@
 {
   "name": "ember-pod-workflow-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "index.js",
   "repository": "git@github.com:rtablada/pod-workflow-cli.git",
   "author": "Ryan Tablada <ryan.tablada@gmail.com>",
